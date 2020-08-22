@@ -2,6 +2,7 @@ export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/../../artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export PEER0_ORG1_CA=${PWD}/../../artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
 export PEER0_ORG2_CA=${PWD}/../../artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+export PEER0_ORG3_CA=${PWD}/../../artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
 
 
@@ -98,36 +99,13 @@ approveForMyOrg1() {
 
 }
 
+# approveForMyOrg1
+
 checkCommitReadyness() {
     setGlobalsForPeer0Org1
     peer lifecycle chaincode checkcommitreadiness \
         --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${VERSION} \
         --sequence ${VERSION} --output json --init-required
-    echo "===================== checking commit readyness from org 1 ===================== "
-}
-
-# checkCommitReadyness
-
-approveForMyOrg2() {
-    setGlobalsForPeer0Org2
-
-    peer lifecycle chaincode approveformyorg -o localhost:7050 \
-        --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED \
-        --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} \
-        --version ${VERSION} --init-required --package-id ${PACKAGE_ID} \
-        --sequence ${VERSION}
-
-    echo "===================== chaincode approved from org 2 ===================== "
-}
-
-# approveForMyOrg2
-
-checkCommitReadyness() {
-
-    setGlobalsForPeer0Org1
-    peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
-        --name ${CC_NAME} --version ${VERSION} --sequence ${VERSION} --output json --init-required
     echo "===================== checking commit readyness from org 1 ===================== "
 }
 
@@ -140,6 +118,7 @@ commitChaincodeDefination() {
         --channelID $CHANNEL_NAME --name ${CC_NAME} \
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA \
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_ORG3_CA \
         --version ${VERSION} --sequence ${VERSION} --init-required
 }
 
@@ -161,6 +140,7 @@ chaincodeInvokeInit() {
         -C $CHANNEL_NAME -n ${CC_NAME} \
         --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG1_CA \
         --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA \
+         --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_ORG3_CA \
         --isInit -c '{"Args":[]}'
 
 }
@@ -171,15 +151,15 @@ chaincodeInvoke() {
     setGlobalsForPeer0Org1
 
     ## Create Car
-    # peer chaincode invoke -o localhost:7050 \
-    #     --ordererTLSHostnameOverride orderer.example.com \
-    #     --tls $CORE_PEER_TLS_ENABLED \
-    #     --cafile $ORDERER_CA \
-    #     -C $CHANNEL_NAME -n ${CC_NAME}  \
-    #     --peerAddresses localhost:7051 \
-    #     --tlsRootCertFiles $PEER0_ORG1_CA \
-    #     --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA   \
-    #     -c '{"function": "createCar","Args":["Car-ABCDEEE", "Audi", "R8", "Red", "Pavan"]}'
+    peer chaincode invoke -o localhost:7050 \
+        --ordererTLSHostnameOverride orderer.example.com \
+        --tls $CORE_PEER_TLS_ENABLED \
+        --cafile $ORDERER_CA \
+        -C $CHANNEL_NAME -n ${CC_NAME}  \
+        --peerAddresses localhost:7051 \
+        --tlsRootCertFiles $PEER0_ORG1_CA \
+        --peerAddresses localhost:9051 --tlsRootCertFiles $PEER0_ORG2_CA   \
+        -c '{"function": "createCar","Args":["Car-ABCDEEE", "Audi", "R8", "Red", "Sandip"]}'
 
     ## Init ledger
     peer chaincode invoke -o localhost:7050 \
@@ -203,22 +183,22 @@ chaincodeQuery() {
  
 }
 
-# chaincodeQuery
+chaincodeQuery
 
 # Run this function if you add any new dependency in chaincode
 # presetup
 
-packageChaincode
-installChaincode
-queryInstalled
-approveForMyOrg1
-checkCommitReadyness
-approveForMyOrg2
-checkCommitReadyness
-commitChaincodeDefination
-queryCommitted
-chaincodeInvokeInit
-sleep 5
-chaincodeInvoke
-sleep 3
-chaincodeQuery
+# packageChaincode
+# installChaincode
+# queryInstalled
+# approveForMyOrg1
+# checkCommitReadyness
+# approveForMyOrg2
+# checkCommitReadyness
+# commitChaincodeDefination
+# queryCommitted
+# chaincodeInvokeInit
+# sleep 5
+# chaincodeInvoke
+# sleep 3
+# chaincodeQuery

@@ -197,6 +197,5 @@ services:
       - test
     volumes:
       - /var/run/:/host/var/run/
-      - ./src/github.com:/opt/gopath/src/github.com/
-      - ../../artifacts/channel/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+      # - ../../artifacts/channel/crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
       - ../../artifacts/channel/:/etc/hyperledger/channel/

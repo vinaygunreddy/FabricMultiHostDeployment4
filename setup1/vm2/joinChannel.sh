@@ -25,9 +25,9 @@ fetchChannelBlock() {
     rm -rf ./channel-artifacts/*
     setGlobalsForPeer0Org2
 
-    peer channel fetch config config_block.pb -o localhost:7050 \
+    peer channel fetch 0 ./channel-artifacts/$CHANNEL_NAME.block -o localhost:7050 \
         --ordererTLSHostnameOverride orderer.example.com \
-        -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+        -c $CHANNEL_NAME --tls --cafile $ORDERER_CA 
 }
 
 # fetchChannelBlock
@@ -52,3 +52,8 @@ updateAnchorPeers() {
 }
 
 # updateAnchorPeers
+
+
+fetchChannelBlock
+joinChannel
+updateAnchorPeers

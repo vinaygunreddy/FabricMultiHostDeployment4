@@ -69,7 +69,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+# .env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -103,3 +103,14 @@ dist
 # TernJS port file
 .tern-port
 artifacts/src/github.com/fabcar/go/vendor
+setup1/vm2/config_block.pb
+setup1/vm1/channel-artifacts/mychannel.block
+setup1/vm2/mychannel.block
+setup1/vm2/channel-artifacts/mychannel.block
+setup1/vm3/channel-artifacts/mychannel.block
+setup1/vm1/fabcar.tar.gz
+setup1/vm1/log.txt
+setup1/vm2/fabcar.tar.gz
+setup1/vm2/log.txt
+setup1/vm3/fabcar.tar.gz
+setup1/vm3/log.txt

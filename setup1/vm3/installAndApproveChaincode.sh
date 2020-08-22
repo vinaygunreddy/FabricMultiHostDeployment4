@@ -86,17 +86,9 @@ checkCommitReadyness() {
 
     setGlobalsForPeer0Org3
     peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME \
-        --peerAddresses localhost:7051 --tlsRootCertFiles $PEER0_ORG3_CA \
+        --peerAddresses localhost:11051 --tlsRootCertFiles $PEER0_ORG3_CA \
         --name ${CC_NAME} --version ${VERSION} --sequence ${VERSION} --output json --init-required
     echo "===================== checking commit readyness from org 3 ===================== "
 }
 
-# checkCommitReadyness
-
-queryCommitted() {
-    setGlobalsForPeer0Org3
-    peer lifecycle chaincode querycommitted --channelID $CHANNEL_NAME --name ${CC_NAME}
-
-}
-
-# chaincodeQuery
+checkCommitReadyness

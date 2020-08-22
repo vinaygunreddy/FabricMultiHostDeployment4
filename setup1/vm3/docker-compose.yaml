@@ -18,8 +18,8 @@ services:
       - "9054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./channel/crypto-config/peerOrganizations/org3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
-      - ./channel/crypto-config/peerOrganizations/org3.example.com/tlsca/:/etc/hyperledger/fabric-ca-server-tls
+      - ../../artifacts/channel/crypto-config/peerOrganizations/org3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ../../artifacts/channel/crypto-config/peerOrganizations/org3.example.com/tlsca/:/etc/hyperledger/fabric-ca-server-tls
     container_name: ca.org3.example.com
     hostname: ca.org3.example.com
     networks:
@@ -56,9 +56,9 @@ services:
     networks:
       - test
     volumes:
-      - ./channel/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-      - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp:/var/hyperledger/orderer/msp
-      - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls:/var/hyperledger/orderer/tls
+      - ../../artifacts/channel/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ../../artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/msp:/var/hyperledger/orderer/msp
+      - ../../artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer3.example.com/tls:/var/hyperledger/orderer/tls
 
   couchdb4:
     container_name: couchdb4
@@ -102,12 +102,12 @@ services:
       # Peer used to bootstrap gossip within organisation
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org3.example.com:12051
       # Exposed for discovery Service
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org3.example.com:11051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org3.example.com:5984
 
       # - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:9440
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb4:9984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb4:5984
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
       - CORE_METRICS_PROVIDER=prometheus
@@ -117,14 +117,14 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/crypto/peer/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/crypto/peer/msp
     depends_on:
-      - couchdb0
+      - couchdb4
     ports:
-      - 11051:7051
+      - 11051:11051
     volumes:
-      - ./channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/crypto/peer/msp
-      - ./channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls:/etc/hyperledger/crypto/peer/tls
+      - ../../artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/msp:/etc/hyperledger/crypto/peer/msp
+      - ../../artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls:/etc/hyperledger/crypto/peer/tls
       - /var/run/:/host/var/run/
-      - ./channel/:/etc/hyperledger/channel/
+      - ../../artifacts/channel/:/etc/hyperledger/channel/
     networks:
       - test
 
@@ -150,7 +150,7 @@ services:
       - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org3.example.com:12051
 
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb5:10984
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb5:5984
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
       - CORE_PEER_TLS_ENABLED=true
@@ -161,9 +161,9 @@ services:
     ports:
       - 12051:12051
     volumes:
-      - ./channel/crypto-config/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/msp:/etc/hyperledger/crypto/peer/msp
-      - ./channel/crypto-config/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/tls:/etc/hyperledger/crypto/peer/tls
+      - ../../artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/msp:/etc/hyperledger/crypto/peer/msp
+      - ../../artifacts/channel/crypto-config/peerOrganizations/org3.example.com/peers/peer1.org3.example.com/tls:/etc/hyperledger/crypto/peer/tls
       - /var/run/:/host/var/run/
-      - ./channel/:/etc/hyperledger/channel/
+      - ../../artifacts/channel/:/etc/hyperledger/channel/
     networks:
       - test
