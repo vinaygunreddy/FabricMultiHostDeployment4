@@ -155,7 +155,7 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
 
-      - CORE_CHAINCODE_KEEPALIVE=10
+      - CORE_CHAINCODE_KEEPALIVE=10 
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
     networks:
@@ -163,4 +163,7 @@ services:
     volumes:
       - /var/run/:/host/var/run/
       # - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
-      - ./:/etc/hyperledger/channel/
+      - ./crypto-config/peerOrganizations/org1.example.com/:/etc/hyperledger/channel/crypto-config/ordererOrganizations/org1.example.com/
+      - ./../vm2/crypto-config/peerOrganizations/org2.example.com/:/etc/hyperledger/channel/crypto-config/peerOrganizations/org2.example.com/
+      - ./../vm3/crypto-config/peerOrganizations/org3.example.com/:/etc/hyperledger/channel/crypto-config/peerOrganizations/org3.example.com/
+      - ./../vm4/crypto-config/ordererOrganizations/example.com/:/etc/hyperledger/channel/crypto-config/ordererOrganizations/example.com/

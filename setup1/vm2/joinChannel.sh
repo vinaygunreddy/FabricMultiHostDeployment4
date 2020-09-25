@@ -41,7 +41,7 @@ joinChannel() {
 
 }
 
-joinChannel
+# joinChannel
 
 updateAnchorPeers() {
     setGlobalsForPeer0Org2
@@ -51,7 +51,7 @@ updateAnchorPeers() {
 
 }
 
-# updateAnchorPeers
+updateAnchorPeers
 
 
 # fetchChannelBlock
