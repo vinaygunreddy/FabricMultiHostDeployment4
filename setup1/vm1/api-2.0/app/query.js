@@ -35,7 +35,7 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         // Create a new gateway for connecting to our peer node.
         const gateway = new Gateway();
         await gateway.connect(ccp, {
-            wallet, identity: username, discovery: { enabled: true, asLocalhost: true }
+            wallet, identity: username, discovery: { enabled: true, asLocalhost: false }
         });
 
         // Get the network (channel) our contract is deployed to.
@@ -45,35 +45,16 @@ const query = async (channelName, chaincodeName, args, fcn, username, org_name) 
         const contract = network.getContract(chaincodeName);
         let result;
 
-        switch (fcn) {
-            case "GetInvoiceById":
-                result = await contract.evaluateTransaction(fcn, args[0]);
+        if (fcn == "queryCar" || fcn =="queryCarsByOwner" || fcn == 'getHistoryForAsset' || fcn=='restictedMethod') {
+            console.log(`arguments type is------------------------------------------------------------- ${typeof args}`)
+            console.log(`length of args is------------------------------------------------------------ ${args.length}`)
+            result = await contract.evaluateTransaction(fcn, args[0]);
 
-                break;
+        } else if (fcn == "readPrivateCar" || fcn == "queryPrivateDataHash"
+        || fcn == "collectionCarPrivateDetails") {
+            result = await contract.evaluateTransaction(fcn, args[0], args[1]);
+            // return result
 
-            case "GetHistoryForAsset":
-                result = await contract.evaluateTransaction(fcn, args[0]);
-
-                break;
-            case "GetContractsForQuery":
-                let queryString;
-                console.log(`username is ${username}`)
-
-                if (username == 'superuser') {
-                    queryString = "{\"selector\":{\"docType\":\"Visitor\"}}"
-                    console.log(`itssuperuser`)
-                } else {
-
-                    queryString = `{\"selector\":{\"docType\":\"Visitor\",\"creator\":\"${username}\"}}`
-                }
-
-                // let qs3= "{\"selector\":{\"EndDate\":{\"$gt\":1}}}"  {\"docType\":\"marble\",\"owner\":\"tom\"}
-                result = await contract.evaluateTransaction(fcn, queryString);
-
-                console.log(JSON.stringify(result))
-
-            default:
-                break;
         }
 
         console.log(result)
