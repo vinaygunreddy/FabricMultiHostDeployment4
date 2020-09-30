@@ -3,7 +3,6 @@ export ORDERER_CA=${PWD}/../vm4/crypto-config/ordererOrganizations/example.com/o
 export PEER0_ORG2_CA=${PWD}/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 export FABRIC_CFG_PATH=${PWD}/../../artifacts/channel/config/
 
-
 export CHANNEL_NAME=mychannel
 
 setGlobalsForPeer0Org2() {
@@ -71,6 +70,7 @@ queryInstalled() {
 approveForMyOrg2() {
     setGlobalsForPeer0Org2
 
+    # Replace localhost with your orderer's vm IP address
     peer lifecycle chaincode approveformyorg -o localhost:7050 \
         --ordererTLSHostnameOverride orderer.example.com --tls $CORE_PEER_TLS_ENABLED \
         --cafile $ORDERER_CA --channelID $CHANNEL_NAME --name ${CC_NAME} \
@@ -92,4 +92,3 @@ checkCommitReadyness() {
 }
 
 # checkCommitReadyness
-
