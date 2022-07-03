@@ -20,14 +20,14 @@ type SmartContract struct {
 
 // Car :  Define the car structure, with 4 properties.  Structure tags are used by encoding/json library
 type Car struct {
-	Make   string `json:"make"`
-	Model  string `json:"model"`
-	Colour string `json:"colour"`
-	Owner  string `json:"owner"`
+	FileName   string `json:"filename"`
+	InstanceName  string `json:"instancename"`
+	HashValue string `json:"hashvalue"`
+	Path  string `json:"path"`
 }
 
 type carPrivateDetails struct {
-	Owner string `json:"owner"`
+	Path string `json:"path"`
 	Price string `json:"price"`
 }
 
@@ -152,16 +152,16 @@ func (s *SmartContract) test(APIstub shim.ChaincodeStubInterface, args []string)
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	cars := []Car{
-		Car{Make: "Toyota", Model: "Prius", Colour: "blue", Owner: "Tomoko"},
-		Car{Make: "Ford", Model: "Mustang", Colour: "red", Owner: "Brad"},
-		Car{Make: "Hyundai", Model: "Tucson", Colour: "green", Owner: "Jin Soo"},
-		Car{Make: "Volkswagen", Model: "Passat", Colour: "yellow", Owner: "Max"},
-		Car{Make: "Tesla", Model: "S", Colour: "black", Owner: "Adriana"},
-		Car{Make: "Peugeot", Model: "205", Colour: "purple", Owner: "Michel"},
-		Car{Make: "Chery", Model: "S22L", Colour: "white", Owner: "Aarav"},
-		Car{Make: "Fiat", Model: "Punto", Colour: "violet", Owner: "Pari"},
-		Car{Make: "Tata", Model: "Nano", Colour: "indigo", Owner: "Valeria"},
-		Car{Make: "Holden", Model: "Barina", Colour: "brown", Owner: "Shotaro"},
+		Car{FileName: "Toyota", InstanceName: "Prius", HashValue: "blue", Path: "Tomoko"},
+		Car{FileName: "Ford", InstanceName: "Mustang", HashValue: "red", Path: "Brad"},
+		Car{FileName: "Hyundai", InstanceName: "Tucson", HashValue: "green", Path: "Jin Soo"},
+		Car{FileName: "Volkswagen", InstanceName: "Passat", HashValue: "yellow", Path: "Max"},
+		Car{FileName: "Tesla", InstanceName: "S", HashValue: "black", Path: "Adriana"},
+		Car{FileName: "Peugeot", InstanceName: "205", HashValue: "purple", Path: "Michel"},
+		Car{FileName: "Chery", InstanceName: "S22L", HashValue: "white", Path: "Aarav"},
+		Car{FileName: "Fiat", InstanceName: "Punto", HashValue: "violet", Path: "Pari"},
+		Car{FileName: "Tata", InstanceName: "Nano", HashValue: "indigo", Path: "Valeria"},
+		Car{FileName: "Holden", InstanceName: "Barina", HashValue: "brown", Path: "Shotaro"},
 	}
 
 	i := 0
@@ -176,10 +176,10 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 func (s *SmartContract) createPrivateCar(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	type carTransientInput struct {
-		Make  string `json:"make"` //the fieldtags are needed to keep case from bouncing around
-		Model string `json:"model"`
-		Color string `json:"color"`
-		Owner string `json:"owner"`
+		FileName  string `json:"filename"` //the fieldtags are needed to keep case from bouncing around
+		InstanceName string `json:"instancename"`
+		HashValue string `json:"hashvalue"`
+		Path string `json:"path"`
 		Price string `json:"price"`
 		Key   string `json:"key"`
 	}
@@ -217,16 +217,16 @@ func (s *SmartContract) createPrivateCar(APIstub shim.ChaincodeStubInterface, ar
 	if len(carInput.Key) == 0 {
 		return shim.Error("name field must be a non-empty string")
 	}
-	if len(carInput.Make) == 0 {
+	if len(carInput.FileName) == 0 {
 		return shim.Error("color field must be a non-empty string")
 	}
-	if len(carInput.Model) == 0 {
+	if len(carInput.InstanceName) == 0 {
 		return shim.Error("model field must be a non-empty string")
 	}
-	if len(carInput.Color) == 0 {
+	if len(carInput.HashValue) == 0 {
 		return shim.Error("color field must be a non-empty string")
 	}
-	if len(carInput.Owner) == 0 {
+	if len(carInput.Path) == 0 {
 		return shim.Error("owner field must be a non-empty string")
 	}
 	if len(carInput.Price) == 0 {
@@ -246,7 +246,7 @@ func (s *SmartContract) createPrivateCar(APIstub shim.ChaincodeStubInterface, ar
 
 	logger.Infof("55555")
 
-	var car = Car{Make: carInput.Make, Model: carInput.Model, Colour: carInput.Color, Owner: carInput.Owner}
+	var car = Car{FileName: carInput.FileName, InstanceName: carInput.InstanceName, HashValue: carInput.HashValue, Path: carInput.Path}
 
 	carAsBytes, err = json.Marshal(car)
 	if err != nil {
@@ -258,7 +258,7 @@ func (s *SmartContract) createPrivateCar(APIstub shim.ChaincodeStubInterface, ar
 		return shim.Error(err.Error())
 	}
 
-	carPrivateDetails := &carPrivateDetails{Owner: carInput.Owner, Price: carInput.Price}
+	carPrivateDetails := &carPrivateDetails{Path: carInput.Path, Price: carInput.Price}
 
 	carPrivateDetailsAsBytes, err := json.Marshal(carPrivateDetails)
 	if err != nil {
@@ -278,7 +278,7 @@ func (s *SmartContract) createPrivateCar(APIstub shim.ChaincodeStubInterface, ar
 func (s *SmartContract) updatePrivateData(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	type carTransientInput struct {
-		Owner string `json:"owner"`
+		Path string `json:"path"`
 		Price string `json:"price"`
 		Key   string `json:"key"`
 	}
@@ -311,7 +311,7 @@ func (s *SmartContract) updatePrivateData(APIstub shim.ChaincodeStubInterface, a
 		return shim.Error("44444 -Failed to decode JSON of: " + string(carDataAsBytes) + "Error is : " + err.Error())
 	}
 
-	carPrivateDetails := &carPrivateDetails{Owner: carInput.Owner, Price: carInput.Price}
+	carPrivateDetails := &carPrivateDetails{Path: carInput.Path, Price: carInput.Price}
 
 	carPrivateDetailsAsBytes, err := json.Marshal(carPrivateDetails)
 	if err != nil {
@@ -335,13 +335,13 @@ func (s *SmartContract) createCar(APIstub shim.ChaincodeStubInterface, args []st
 		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
 
-	var car = Car{Make: args[1], Model: args[2], Colour: args[3], Owner: args[4]}
+	var car = Car{FileName: args[1], InstanceName: args[2], HashValue: args[3], Path: args[4]}
 
 	carAsBytes, _ := json.Marshal(car)
 	APIstub.PutState(args[0], carAsBytes)
 
 	indexName := "owner~key"
-	colorNameIndexKey, err := APIstub.CreateCompositeKey(indexName, []string{car.Owner, args[0]})
+	colorNameIndexKey, err := APIstub.CreateCompositeKey(indexName, []string{car.Path, args[0]})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -356,9 +356,9 @@ func (S *SmartContract) queryCarsByOwner(APIstub shim.ChaincodeStubInterface, ar
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments")
 	}
-	owner := args[0]
+	path := args[0]
 
-	ownerAndIdResultIterator, err := APIstub.GetStateByPartialCompositeKey("owner~key", []string{owner})
+	ownerAndIdResultIterator, err := APIstub.GetStateByPartialCompositeKey("owner~key", []string{path})
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -497,7 +497,7 @@ func (s *SmartContract) changeCarOwner(APIstub shim.ChaincodeStubInterface, args
 	car := Car{}
 
 	json.Unmarshal(carAsBytes, &car)
-	car.Owner = args[1]
+	car.Path = args[1]
 
 	carAsBytes, _ = json.Marshal(car)
 	APIstub.PutState(args[0], carAsBytes)
@@ -574,7 +574,7 @@ func (s *SmartContract) createPrivateCarImplicitForOrg1(APIstub shim.ChaincodeSt
 		return shim.Error("Incorrect arguments. Expecting 5 arguments")
 	}
 
-	var car = Car{Make: args[1], Model: args[2], Colour: args[3], Owner: args[4]}
+	var car = Car{FileName: args[1], InstanceName: args[2], HashValue: args[3], Path: args[4]}
 
 	carAsBytes, _ := json.Marshal(car)
 	// APIstub.PutState(args[0], carAsBytes)
@@ -592,7 +592,7 @@ func (s *SmartContract) createPrivateCarImplicitForOrg2(APIstub shim.ChaincodeSt
 		return shim.Error("Incorrect arguments. Expecting 5 arguments")
 	}
 
-	var car = Car{Make: args[1], Model: args[2], Colour: args[3], Owner: args[4]}
+	var car = Car{FileName: args[1], InstanceName: args[2], HashValue: args[3], Path: args[4]}
 
 	carAsBytes, _ := json.Marshal(car)
 	APIstub.PutState(args[0], carAsBytes)
@@ -649,7 +649,7 @@ func (s *SmartContract) queryPrivateDataHash(APIstub shim.ChaincodeStubInterface
 // 	for i, s := range args {
 
 // 		key :=s[0];
-// 		var car = Car{Make: s[1], Model: s[2], Colour: s[3], Owner: s[4]}
+// 		var car = Car{FileName: s[1], Model: s[2], Colour: s[3], Owner: s[4]}
 
 // 		eventKeyValue = strings.SplitN(s, "#", 3)
 // 		if len(eventKeyValue) != 3 {
